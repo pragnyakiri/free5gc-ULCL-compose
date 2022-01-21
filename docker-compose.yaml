@@ -59,8 +59,8 @@ services:
       args:
         DEBUG_TOOLS: "false"
     command: ./amf -amfcfg ../config/amfcfg.yaml
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
     volumes:
       - ./config/amfcfg.yaml:/free5gc/config/amfcfg.yaml
     environment:
