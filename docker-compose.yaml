@@ -14,8 +14,7 @@ services:
     cap_add:
       - NET_ADMIN
     networks:
-      public_net:
-        ipv4_address: 192.168.70.134
+      privnet:
         aliases:
           - upf.free5gc.org
 
@@ -28,8 +27,7 @@ services:
     volumes:
       - dbdata:/data/db
     networks:
-      public_net:
-        ipv4_address: 192.168.70.131
+      privnet:
         aliases:
           - db
 
@@ -48,8 +46,7 @@ services:
       DB_URI: mongodb://db/free5gc
       GIN_MODE: release
     networks:
-      public_net:
-        ipv4_address: 192.168.70.130
+      privnet:
         aliases:
           - nrf.free5gc.org
     depends_on:
@@ -69,8 +66,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      public_net:
-        ipv4_address: 192.168.70.132
+      privnet:
         aliases:
           - amf.free5gc.org
     depends_on:
@@ -90,7 +86,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      public_net:
+      privnet:
         aliases:
           - ausf.free5gc.org
     depends_on:
@@ -110,7 +106,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      public_net:
+      privnet:
         aliases:
           - nssf.free5gc.org
     depends_on:
@@ -130,7 +126,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      public_net:
+      privnet:
         aliases:
           - pcf.free5gc.org
     depends_on:
@@ -151,8 +147,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      public_net:
-        ipv4_address: 192.168.70.133
+      privnet:
         aliases:
           - smf.free5gc.org
     depends_on:
@@ -173,7 +168,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      public_net:
+      privnet:
         aliases:
           - udm.free5gc.org
     depends_on:
@@ -195,7 +190,7 @@ services:
       DB_URI: mongodb://db/free5gc
       GIN_MODE: release
     networks:
-      public_net:
+      privnet:
         aliases:
           - udr.free5gc.org
     depends_on:
@@ -217,7 +212,7 @@ services:
     cap_add:
       - NET_ADMIN
     networks:
-      public_net:
+      privnet:
         aliases:
           - n3iwf.free5gc.org
     depends_on:
@@ -237,7 +232,7 @@ services:
     environment:
       - GIN_MODE=release
     networks:
-      public_net:
+      privnet:
         aliases:
           - webui
     ports:
@@ -246,14 +241,13 @@ services:
       - db
 
 networks:
-  public_net:
-      driver: bridge
-      name: demo-oai-public-net
-      ipam:
-          config:
-              - subnet: 192.168.70.128/26
-      driver_opts:
-          com.docker.network.bridge.name: "demo-oai"
+  privnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.100.200.0/24
+    driver_opts:
+      com.docker.network.bridge.name: br-free5gc
 
 volumes:
   dbdata:
