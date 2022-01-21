@@ -90,7 +90,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      privnet:
+      public_net:
         aliases:
           - ausf.free5gc.org
     depends_on:
@@ -110,7 +110,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      privnet:
+      public_net:
         aliases:
           - nssf.free5gc.org
     depends_on:
@@ -130,7 +130,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      privnet:
+      public_net:
         aliases:
           - pcf.free5gc.org
     depends_on:
@@ -173,7 +173,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      privnet:
+      public_net:
         aliases:
           - udm.free5gc.org
     depends_on:
@@ -195,7 +195,7 @@ services:
       DB_URI: mongodb://db/free5gc
       GIN_MODE: release
     networks:
-      privnet:
+      public_net:
         aliases:
           - udr.free5gc.org
     depends_on:
@@ -217,7 +217,7 @@ services:
     cap_add:
       - NET_ADMIN
     networks:
-      privnet:
+      public_net:
         aliases:
           - n3iwf.free5gc.org
     depends_on:
@@ -237,7 +237,7 @@ services:
     environment:
       - GIN_MODE=release
     networks:
-      privnet:
+      public_net:
         aliases:
           - webui
     ports:
