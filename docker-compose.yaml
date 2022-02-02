@@ -1,22 +1,61 @@
 version: '3.8'
 
 services:
-  free5gc-upf:
-    container_name: upf
+  free5gc-upf-3:
+    container_name: branching-upf
     build:
       context: ./nf_upf
       args:
         DEBUG_TOOLS: "false"
     command: bash -c "./upf-iptables.sh && ./free5gc-upfd -f ../config/upfcfg.yaml"
     volumes:
-      - ./config/upfcfg.yaml:/free5gc/config/upfcfg.yaml
+      - ./config/upfcfgb.yaml:/free5gc/config/upfcfg.yaml
       - ./config/upf-iptables.sh:/free5gc/free5gc-upfd/upf-iptables.sh
     cap_add:
       - NET_ADMIN
     networks:
       public_net:
         aliases:
-          - upf.free5gc.org
+          - upfb.free5gc.org
+
+  free5gc-upf-1:
+    container_name: anchor-upf1
+    build:
+      context: ./nf_upf
+      args:
+        DEBUG_TOOLS: "false"
+    command: bash -c "chmod +x upf-iptables.sh && ./upf-iptables.sh && ./free5gc-upfd -f ../config/upfcfg.yaml"
+    volumes:
+      - ./config/upfcfg1.yaml:/free5gc/config/upfcfg.yaml
+      - ./config/upf-iptables.sh:/free5gc/free5gc-upfd/upf-iptables.sh
+    cap_add:
+      - NET_ADMIN
+    networks:
+      public_net:
+        aliases:
+          - upf1.free5gc.org
+    depends_on:
+      - free5gc-upf-3
+
+  free5gc-upf-2:
+    container_name: anchor-upf2
+    build:
+      context: ./nf_upf
+      args:
+        DEBUG_TOOLS: "false"
+    command: bash -c "chmod +x upf-iptables.sh && ./upf-iptables.sh && ./free5gc-upfd -f ../config/upfcfg.yaml"
+    volumes:
+      - ./config/upfcfg2.yaml:/free5gc/config/upfcfg.yaml
+      - ./config/upf-iptables.sh:/free5gc/free5gc-upfd/upf-iptables.sh
+    cap_add:
+      - NET_ADMIN
+    networks:
+      public_net:
+        aliases:
+          - upf2.free5gc.org
+    depends_on:
+      - free5gc-upf-3 
+      - free5gc-upf-1
 
   db:
     container_name: mongodb
@@ -143,7 +182,7 @@ services:
       - "8000"
     volumes:
       - ./config/smfcfg.yaml:/free5gc/config/smfcfg.yaml
-      - ./config/uerouting.yaml:/free5gc/config/uerouting.yaml
+      - ./config/uerouting_changed.yaml:/free5gc/config/uerouting.yaml
     environment:
       GIN_MODE: release
     networks:
@@ -152,7 +191,9 @@ services:
           - smf.free5gc.org
     depends_on:
       - free5gc-nrf
-      - free5gc-upf
+      - free5gc-upf-1
+      - free5gc-upf-2
+      - free5gc-upf-3
 
   free5gc-udm:
     container_name: udm
@@ -218,7 +259,7 @@ services:
     depends_on:
       - free5gc-amf
       - free5gc-smf
-      - free5gc-upf
+      - free5gc-upf-2
 
   free5gc-webui:
     container_name: webui

@@ -33,9 +33,9 @@ configuration:
     up_nodes: # information of userplane node (AN or UPF)
       gNB: # the name of the node
         type: AN # the type of the node (AN or UPF)
-      UPF:  # the name of the node
+      BranchingUPF:  # the name of the node
         type: UPF # the type of the node (AN or UPF)
-        node_id: upf.free5gc.org # the IP/FQDN of N4 interface on this UPF (PFCP)
+        node_id: upfb.free5gc.org # the IP/FQDN of N4 interface on this UPF (PFCP)
         sNssaiUpfInfos: # S-NSSAI information list for this UPF
           - sNssai: # S-NSSAI (Single Network Slice Selection Assistance Information)
               sst: 1 # Slice/Service Type (uinteger, range: 0~255)
@@ -47,14 +47,52 @@ configuration:
         interfaces: # Interface list for this UPF
           - interfaceType: N3 # the type of the interface (N3 or N9)
             endpoints: # the IP address of this N3/N9 interface on this UPF
-              - upf.free5gc.org
+              - upfb.free5gc.org
             networkInstance: internet # Data Network Name (DNN)
+          - interfaceType: N9 # the type of the interface (N3 or N9)
+            endpoints: # the IP address of this N3/N9 interface on this UPF
+              - upfb.free5gc.org
+            networkInstance: internet # Data Network Name (DNN)
+
+      AnchorUPF1:
+        type: UPF
+        node_id: upf1.free5gc.org
+        sNssaiUpfInfo:
+          sNssai:
+            sst: 1
+            sd: 010203
+          dnnUpfInfoList:
+            - dnn: internet
+        interfaces:
+          - interfaceType: N9
+            endpoints:
+              - upf1.free5gc.org
+            networkInstance: internet
+
+      AnchorUPF2:
+        type: UPF
+        node_id: upf2.free5gc.org
+        sNssaiUpfInfo:
+          sNssai:
+            sst: 1
+            sd: 010203
+          dnnUpfInfoList:
+            - dnn: internet
+        interfaces:
+          - interfaceType: N9
+            endpoints:
+              - upf2.free5gc.org
+            networkInstance: internet
     links: # the topology graph of userplane, A and B represent the two nodes of each link
-      - A: gNB
-        B: UPF
+      - A: gNB1
+        B: BranchingUPF
+      - A: BranchingUPF
+        B: AnchorUPF1
+      - A: BranchingUPF
+        B: AnchorUPF2
+
   nrfUri: http://nrf.free5gc.org:8000 # a valid URI of NRF
-  locality: area1 # Name of the location where a set of AMF, SMF and UPFs are located
-  #ulcl: false
+  ulcl: true
 
 # the kind of log output
   # debugLevel: how detailed to output, value: trace, debug, info, warn, error, fatal, panic
