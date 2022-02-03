@@ -84,7 +84,7 @@ configuration:
               - upf2.free5gc.org
             networkInstance: internet
     links: # the topology graph of userplane, A and B represent the two nodes of each link
-      - A: gNB1
+      - A: gNB
         B: BranchingUPF
       - A: BranchingUPF
         B: AnchorUPF1
@@ -92,6 +92,7 @@ configuration:
         B: AnchorUPF2
 
   nrfUri: http://nrf.free5gc.org:8000 # a valid URI of NRF
+  locality: area1
   ulcl: true
 
 # the kind of log output
