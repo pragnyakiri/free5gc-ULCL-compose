@@ -18,6 +18,6 @@ configuration:
 
   dnn_list:
     - dnn: internet
-      cidr: 12.1.1.0/24
+      cidr: 60.60.0.0/16
       # [optional] apn_list[*].natifname
       # natifname: eth0
